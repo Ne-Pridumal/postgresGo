@@ -10,12 +10,14 @@ import (
 type Store struct {
 	config *Config
 
-	db                   *sql.DB
-	ticketRepository     *TicketRepository
-	airportRepository    *AirportRepository
-	airplaneRepository   *AirplaneRepository
-	flightRepository     *FlightRepository
-	salesAgentRepository *SalesAgentRepository
+	db                     *sql.DB
+	ticketRepository       *TicketRepository
+	airportRepository      *AirportRepository
+	airplaneRepository     *AirplaneRepository
+	flightRepository       *FlightRepository
+	salesAgentRepository   *SalesAgentRepository
+	airCarrierRepository   *AirCarrierRepository
+	airportAgentRepository *AirportAgentRepository
 }
 
 // New ...
@@ -103,4 +105,27 @@ func (s *Store) SalesAgentRepository() *SalesAgentRepository {
 	}
 
 	return s.salesAgentRepository
+}
+
+func (s *Store) AirCarrierRepository() *AirCarrierRepository {
+	if s.airCarrierRepository != nil {
+		return s.airCarrierRepository
+	}
+
+	s.airCarrierRepository = &AirCarrierRepository{
+		store: s,
+	}
+
+	return s.airCarrierRepository
+}
+func (s *Store) AirportAgentRepository() *AirportAgentRepository {
+	if s.airportAgentRepository != nil {
+		return s.airportAgentRepository
+	}
+
+	s.airportAgentRepository = &AirportAgentRepository{
+		store: s,
+	}
+
+	return s.airportAgentRepository
 }
