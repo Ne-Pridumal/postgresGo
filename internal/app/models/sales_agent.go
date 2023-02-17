@@ -1,7 +1,7 @@
 package models
 
-type Sales_agent struct {
-	Sales_agent_key     uint
-	Flight_key          uint
-	Sold_tickets_number uint
+type SalesAgent struct {
+	SalesAgentKey     uint
+	FlightKey         uint
+	SoldTicketsNumber uint
 }

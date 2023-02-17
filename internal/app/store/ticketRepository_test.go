@@ -14,15 +14,15 @@ func TestTicketRepository(t *testing.T) {
 	defer teardown("tickets")
 
 	ticket, err := s.TicketRepository().Create(&models.Ticket{
-		Ticket_number:  232,
-		Flight_number:  123,
-		Place:          "32a",
-		Price:          32324,
-		Terminal:       3,
-		Arrive_time:    time.Now(),
-		Takeoff_time:   time.Now(),
-		Reg_time:       time.Now(),
-		Passenger_name: "Борис",
+		TicketNumber:  232,
+		FlightNumber:  123,
+		Place:         "32a",
+		Price:         32324,
+		Terminal:      3,
+		ArriveTime:    time.Now(),
+		TakeoffTime:   time.Now(),
+		RegTime:       time.Now(),
+		PassengerName: "Борис",
 	})
 
 	assert.NoError(t, err)
@@ -39,15 +39,15 @@ func TestTicketRepository_FindByName(t *testing.T) {
 	assert.Error(t, err)
 
 	s.TicketRepository().Create(&models.Ticket{
-		Ticket_number:  232,
-		Flight_number:  123,
-		Place:          "32a",
-		Price:          32324,
-		Terminal:       3,
-		Arrive_time:    time.Now(),
-		Takeoff_time:   time.Now(),
-		Reg_time:       time.Now(),
-		Passenger_name: name,
+		TicketNumber:  232,
+		FlightNumber:  123,
+		Place:         "32a",
+		Price:         32324,
+		Terminal:      3,
+		ArriveTime:    time.Now(),
+		TakeoffTime:   time.Now(),
+		RegTime:       time.Now(),
+		PassengerName: name,
 	})
 
 	ticket, err := s.TicketRepository().FindByName(name)

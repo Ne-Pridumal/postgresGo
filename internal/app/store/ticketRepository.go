@@ -13,8 +13,8 @@ func (r *TicketRepository) Create(t *models.Ticket) (*models.Ticket, error) {
 
 	if err := r.store.db.QueryRow(
 		query,
-		t.Flight_number, t.Place, t.Price, t.Passenger_name, t.Terminal, t.Reg_time, t.Takeoff_time, t.Arrive_time,
-	).Scan(&t.Ticket_number); err != nil {
+		t.FlightNumber, t.Place, t.Price, t.PassengerName, t.Terminal, t.RegTime, t.TakeoffTime, t.ArriveTime,
+	).Scan(&t.TicketNumber); err != nil {
 		return nil, err
 	}
 
@@ -30,14 +30,14 @@ func (r *TicketRepository) FindByName(name string) (*models.Ticket, error) {
 		query,
 		name,
 	).Scan(
-		&t.Ticket_number,
+		&t.TicketNumber,
 		&t.Place,
 		&t.Price,
-		&t.Passenger_name,
+		&t.PassengerName,
 		&t.Terminal,
-		&t.Reg_time,
-		&t.Takeoff_time,
-		&t.Arrive_time); err != nil {
+		&t.RegTime,
+		&t.TakeoffTime,
+		&t.ArriveTime); err != nil {
 		return nil, err
 	}
 

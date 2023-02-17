@@ -14,10 +14,10 @@ func TestAirplaneRepository(t *testing.T) {
 	defer teardown("airplanes")
 
 	airplane, err := s.AirplaneRepository().Create(&models.Airplane{
-		Airplane_key:    12312,
-		Number_of_sits:  12,
-		Model:           "Петух",
-		Air_carrier_key: 12342134,
+		AirplaneKey:   12312,
+		NumberOfSits:  12,
+		Model:         "Петух",
+		AirCarrierKey: 12342134,
 	})
 
 	assert.NoError(t, err)
@@ -35,13 +35,13 @@ func TestAirplaneRepository_FindByModel(t *testing.T) {
 	assert.Error(t, err)
 
 	s.AirplaneRepository().Create(&models.Airplane{
-		Airplane_key:    123122,
-		Number_of_sits:  12,
-		Model:           name,
-		Air_carrier_key: 12342134,
+		AirplaneKey:   123122,
+		NumberOfSits:  12,
+		Model:         name,
+		AirCarrierKey: 12342134,
 	})
 
-	airplane, err := s.AirportRepository().FindByName(name)
+	airplane, err := s.AirplaneRepository().FindByModel(name)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, airplane)

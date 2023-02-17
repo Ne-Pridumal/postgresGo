@@ -6,31 +6,31 @@ type AirportAgentRepository struct {
 	store *Store
 }
 
-func (r *AirportAgentRepository) Create(a *models.Airport_agent) (*models.Airport_agent, error) {
+func (r *AirportAgentRepository) Create(a *models.AirportAgent) (*models.AirportAgent, error) {
 	query := "INSERT INTO airport_agents (airport_agent_key, name, airport_key, air_carrier_key) VALUES ($1,$2,$3,$4) RETURNING airport_agent_key"
 	if err := r.store.db.QueryRow(
 		query,
-		a.Air_carrier_key, a.Name, a.Airport_key, a.Airport_agent_key,
+		a.AirCarrierKey, a.Name, a.AirportKey, a.AirportAgentKey,
 	).Scan(
-		&a.Airport_agent_key,
+		&a.AirportAgentKey,
 	); err != nil {
 		return nil, err
 	}
 	return a, nil
 }
 
-func (r *AirportAgentRepository) FindByName(name string) (*models.Airport_agent, error) {
+func (r *AirportAgentRepository) FindByName(name string) (*models.AirportAgent, error) {
 	query := "SELECT * FROM airport_agents WHERE name = $1"
 
-	a := &models.Airport_agent{}
+	a := &models.AirportAgent{}
 	if err := r.store.db.QueryRow(
 		query,
 		name,
 	).Scan(
-		&a.Airport_agent_key,
+		&a.AirportAgentKey,
 		&a.Name,
-		&a.Airport_key,
-		&a.Air_carrier_key,
+		&a.AirportKey,
+		&a.AirCarrierKey,
 	); err != nil {
 		return nil, err
 	}

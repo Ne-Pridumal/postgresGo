@@ -11,8 +11,8 @@ func (r *FlightRepository) Create(f *models.Flight) (*models.Flight, error) {
 
 	if err := r.store.db.QueryRow(
 		query,
-		f.Flight_key, f.Airplane_key, f.Starting_airport_key, f.Final_airport_key, f.Max_tickets_number, f.Sales_agent_key, f.Air_carrier_key, f.Takeoff_time, f.Arrive_time, f.Date,
-	).Scan(&f.Flight_key); err != nil {
+		f.FlightKey, f.AirplaneKey, f.StartingAirportKey, f.FinalAirportKey, f.MaxTicketsNumber, f.SalesAgentKey, f.AirCarrierKey, f.TakeoffTime, f.ArriveTime, f.Date,
+	).Scan(&f.FlightKey); err != nil {
 		return nil, err
 	}
 	return f, nil
@@ -27,15 +27,15 @@ func (r *FlightRepository) FindByFlightKey(key uint) (*models.Flight, error) {
 		query,
 		key,
 	).Scan(
-		&f.Flight_key,
-		&f.Airplane_key,
-		&f.Starting_airport_key,
-		&f.Final_airport_key,
-		&f.Max_tickets_number,
-		&f.Sales_agent_key,
-		&f.Air_carrier_key,
-		&f.Takeoff_time,
-		&f.Arrive_time,
+		&f.FlightKey,
+		&f.AirplaneKey,
+		&f.StartingAirportKey,
+		&f.FinalAirportKey,
+		&f.MaxTicketsNumber,
+		&f.SalesAgentKey,
+		&f.AirCarrierKey,
+		&f.TakeoffTime,
+		&f.ArriveTime,
 		&f.Date,
 	); err != nil {
 		return nil, err

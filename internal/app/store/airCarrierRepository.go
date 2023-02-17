@@ -6,28 +6,28 @@ type AirCarrierRepository struct {
 	store *Store
 }
 
-func (r *AirCarrierRepository) Create(c *models.Air_carrier) (*models.Air_carrier, error) {
+func (r *AirCarrierRepository) Create(c *models.AirCarrier) (*models.AirCarrier, error) {
 	query := "INSERT INTO air_carriers (air_carrier_key, name) VALUES ($1,$2) RETURNING air_carrier_key"
 	if err := r.store.db.QueryRow(
 		query,
-		c.Air_carrier_key, c.Name,
-	).Scan(&c.Air_carrier_key); err != nil {
+		c.AirCarrierKey, c.Name,
+	).Scan(&c.AirCarrierKey); err != nil {
 		return nil, err
 	}
 
 	return c, nil
 }
 
-func (r *AirCarrierRepository) FindByName(name string) (*models.Air_carrier, error) {
-	query := "SELECT * FROM air_carriers WHERE name=$1"
+func (r *AirCarrierRepository) FindByName(name string) (*models.AirCarrier, error) {
+	query := "SELECT * FROM air_carriers WHERE name= $1"
 
-	c := &models.Air_carrier{}
+	c := &models.AirCarrier{}
 
 	if err := r.store.db.QueryRow(
 		query,
 		name,
 	).Scan(
-		&c.Air_carrier_key,
+		&c.AirCarrierKey,
 		&c.Name,
 	); err != nil {
 		return nil, err
