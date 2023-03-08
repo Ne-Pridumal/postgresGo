@@ -9,19 +9,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var bookRef = 1234
+
 func TestTicketRepository(t *testing.T) {
 	s, teardown := store.TestStore(t, databaseURL)
 	defer teardown("tickets")
+	s.BookingRepository().Create(&models.Booking{
+		BookRef:     int32(bookRef),
+		TotalAmount: 1234,
+		BookDate:    time.Now(),
+	})
 
 	ticket, err := s.TicketRepository().Create(&models.Ticket{
-		TicketNumber:  232,
-		FlightNumber:  123,
-		Place:         "32a",
-		Price:         32324,
-		Terminal:      3,
-		ArriveTime:    time.Now(),
-		TakeoffTime:   time.Now(),
-		RegTime:       time.Now(),
+		BookRef:       bookRef,
+		Key:           "123",
+		PassengerId:   1234,
+		ContactDate:   time.Now(),
 		PassengerName: "Борис",
 	})
 
@@ -38,15 +41,16 @@ func TestTicketRepository_FindByName(t *testing.T) {
 	_, err := s.TicketRepository().FindByName(name)
 	assert.Error(t, err)
 
+	s.BookingRepository().Create(&models.Booking{
+		BookRef:     int32(bookRef),
+		TotalAmount: 1234,
+		BookDate:    time.Now(),
+	})
 	s.TicketRepository().Create(&models.Ticket{
-		TicketNumber:  232,
-		FlightNumber:  123,
-		Place:         "32a",
-		Price:         32324,
-		Terminal:      3,
-		ArriveTime:    time.Now(),
-		TakeoffTime:   time.Now(),
-		RegTime:       time.Now(),
+		BookRef:       bookRef,
+		Key:           "123",
+		PassengerId:   1234,
+		ContactDate:   time.Now(),
 		PassengerName: name,
 	})
 

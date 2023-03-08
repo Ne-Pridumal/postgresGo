@@ -13,8 +13,8 @@ func (r *AirportRepository) Create(a *models.Airport) (*models.Airport, error) {
 
 	if err := r.store.db.QueryRow(
 		query,
-		a.Address, a.Name,
-	).Scan(&a.Airport_key); err != nil {
+		a, a.Name,
+	).Scan(&a.Key); err != nil {
 		return nil, err
 	}
 
@@ -30,8 +30,7 @@ func (r *AirportRepository) FindByName(name string) (*models.Airport, error) {
 		query,
 		name,
 	).Scan(
-		&a.Airport_key,
-		&a.Address,
+		&a.Key,
 		&a.Name,
 	); err != nil {
 		return nil, err

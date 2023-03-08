@@ -9,12 +9,16 @@ type TicketRepository struct {
 }
 
 func (r *TicketRepository) Create(t *models.Ticket) (*models.Ticket, error) {
-	query := "INSERT INTO tickets (flight_number, place, price, passenger_name, terminal, reg_time, takeoff_time, arrive_time) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING ticket_number"
+	query := `
+	INSERT INTO tickets (ticket_key, book_ref, passenger_id, passenger_name, contact_data) 
+	VALUES ($1,$2,$3,$4,$5) 
+	RETURNING ticket_key
+	`
 
 	if err := r.store.db.QueryRow(
 		query,
-		t.FlightNumber, t.Place, t.Price, t.PassengerName, t.Terminal, t.RegTime, t.TakeoffTime, t.ArriveTime,
-	).Scan(&t.TicketNumber); err != nil {
+		t.Key, t.BookRef, t.PassengerId, t.PassengerName, t.ContactDate,
+	).Scan(&t.Key); err != nil {
 		return nil, err
 	}
 
@@ -22,7 +26,10 @@ func (r *TicketRepository) Create(t *models.Ticket) (*models.Ticket, error) {
 }
 
 func (r *TicketRepository) FindByName(name string) (*models.Ticket, error) {
-	query := "SELECT ticket_number, place, price, passenger_name, terminal, reg_time, takeoff_time, arrive_time FROM tickets WHERE passenger_name = $1"
+	query := `
+	SELECT * FROM tickets 
+	WHERE passenger_name = $1
+	`
 
 	t := &models.Ticket{}
 
@@ -30,14 +37,8 @@ func (r *TicketRepository) FindByName(name string) (*models.Ticket, error) {
 		query,
 		name,
 	).Scan(
-		&t.TicketNumber,
-		&t.Place,
-		&t.Price,
-		&t.PassengerName,
-		&t.Terminal,
-		&t.RegTime,
-		&t.TakeoffTime,
-		&t.ArriveTime); err != nil {
+		&t.Key, &t.BookRef, &t.PassengerId, &t.PassengerName, &t.ContactDate,
+	); err != nil {
 		return nil, err
 	}
 

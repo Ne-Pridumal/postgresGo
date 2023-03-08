@@ -10,14 +10,12 @@ import (
 type Store struct {
 	config *Config
 
-	db                     *sql.DB
-	ticketRepository       *TicketRepository
-	airportRepository      *AirportRepository
-	airplaneRepository     *AirplaneRepository
-	flightRepository       *FlightRepository
-	salesAgentRepository   *SalesAgentRepository
-	airCarrierRepository   *AirCarrierRepository
-	airportAgentRepository *AirportAgentRepository
+	db                 *sql.DB
+	bookingRepository  *BookingRepository
+	ticketRepository   *TicketRepository
+	airportRepository  *AirportRepository
+	flightRepository   *FlightRepository
+	aircraftRepository *AircraftRepository
 }
 
 // New ...
@@ -47,6 +45,17 @@ func (s *Store) Close() {
 	s.db.Close()
 }
 
+func (s *Store) BookingRepository() *BookingRepository {
+	if s.bookingRepository != nil {
+		return s.bookingRepository
+	}
+	s.bookingRepository = &BookingRepository{
+		store: s,
+	}
+
+	return s.bookingRepository
+}
+
 func (s *Store) TicketRepository() *TicketRepository {
 	if s.ticketRepository != nil {
 		return s.ticketRepository
@@ -59,6 +68,18 @@ func (s *Store) TicketRepository() *TicketRepository {
 	return s.ticketRepository
 }
 
+func (s *Store) AircraftRepository() *AircraftRepository {
+	if s.aircraftRepository != nil {
+		return s.aircraftRepository
+	}
+
+	s.aircraftRepository = &AircraftRepository{
+		store: s,
+	}
+
+	return s.aircraftRepository
+}
+
 func (s *Store) AirportRepository() *AirportRepository {
 	if s.airportRepository != nil {
 		return s.airportRepository
@@ -69,63 +90,4 @@ func (s *Store) AirportRepository() *AirportRepository {
 	}
 
 	return s.airportRepository
-}
-
-func (s *Store) AirplaneRepository() *AirplaneRepository {
-	if s.airplaneRepository != nil {
-		return s.airplaneRepository
-	}
-
-	s.airplaneRepository = &AirplaneRepository{
-		store: s,
-	}
-
-	return s.airplaneRepository
-}
-
-func (s *Store) FlightRepository() *FlightRepository {
-	if s.flightRepository != nil {
-		return s.flightRepository
-	}
-
-	s.flightRepository = &FlightRepository{
-		store: s,
-	}
-
-	return s.flightRepository
-}
-
-func (s *Store) SalesAgentRepository() *SalesAgentRepository {
-	if s.salesAgentRepository != nil {
-		return s.salesAgentRepository
-	}
-
-	s.salesAgentRepository = &SalesAgentRepository{
-		store: s,
-	}
-
-	return s.salesAgentRepository
-}
-
-func (s *Store) AirCarrierRepository() *AirCarrierRepository {
-	if s.airCarrierRepository != nil {
-		return s.airCarrierRepository
-	}
-
-	s.airCarrierRepository = &AirCarrierRepository{
-		store: s,
-	}
-
-	return s.airCarrierRepository
-}
-func (s *Store) AirportAgentRepository() *AirportAgentRepository {
-	if s.airportAgentRepository != nil {
-		return s.airportAgentRepository
-	}
-
-	s.airportAgentRepository = &AirportAgentRepository{
-		store: s,
-	}
-
-	return s.airportAgentRepository
 }

@@ -1,7 +1,8 @@
 package models
 
 type Airport struct {
-	Airport_key uint
-	Address     string
+	Key         uint
 	Name        string
+	City        string
+	Coordinates string
 }

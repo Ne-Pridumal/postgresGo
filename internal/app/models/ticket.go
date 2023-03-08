@@ -3,13 +3,9 @@ package models
 import "time"
 
 type Ticket struct {
-	TicketNumber  uint
-	FlightNumber  uint
-	Place         string
-	Price         uint
+	Key           string
+	BookRef       int
+	PassengerId   int
 	PassengerName string
-	Terminal      uint
-	RegTime       time.Time
-	TakeoffTime   time.Time
-	ArriveTime    time.Time
+	ContactDate   time.Time
 }
