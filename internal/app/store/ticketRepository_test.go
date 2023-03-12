@@ -12,10 +12,12 @@ import (
 var bookRef = 1234
 
 func TestTicketRepository(t *testing.T) {
-	s, teardown := store.TestStore(t, databaseURL)
+	db, teardown := store.TestDB(t, databaseURL)
 	defer teardown("tickets")
+	teardown("bookings")
+	s := store.New(db)
 	s.BookingRepository().Create(&models.Booking{
-		BookRef:     int32(bookRef),
+		BookRef:     bookRef,
 		TotalAmount: 1234,
 		BookDate:    time.Now(),
 	})
@@ -33,16 +35,17 @@ func TestTicketRepository(t *testing.T) {
 }
 
 func TestTicketRepository_FindByName(t *testing.T) {
-	s, teardown := store.TestStore(t, databaseURL)
+	db, teardown := store.TestDB(t, databaseURL)
 	defer teardown("tickets")
-
+	teardown("bookings")
+	s := store.New(db)
 	name := "ИРИСКИН ЕГОР"
 
 	_, err := s.TicketRepository().FindByName(name)
 	assert.Error(t, err)
 
 	s.BookingRepository().Create(&models.Booking{
-		BookRef:     int32(bookRef),
+		BookRef:     bookRef,
 		TotalAmount: 1234,
 		BookDate:    time.Now(),
 	})

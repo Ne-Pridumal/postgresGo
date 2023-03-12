@@ -1,7 +1,7 @@
 package models
 
 type Airport struct {
-	Key         uint
+	Key         int
 	Name        string
 	City        string
 	Coordinates string

@@ -1,7 +1,7 @@
 package models
 
 type Aircraft struct {
-	Key   uint
+	Key   int
 	Model string
 	Range uint
 }

@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Booking struct {
-	BookRef     int32
+	BookRef     int
 	BookDate    time.Time
-	TotalAmount int32
+	TotalAmount int
 }

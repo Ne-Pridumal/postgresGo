@@ -6,8 +6,8 @@ import (
 
 type TicketFlights struct {
 	TicketKey          string
-	FlightKey          uint
+	FlightKey          int
 	ScheduledDeparture time.Time
 	FareCondition      string
-	Amount             uint
+	Amount             int
 }

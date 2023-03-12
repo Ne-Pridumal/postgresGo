@@ -1,16 +1,17 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Flight struct {
-	FlightKey          uint
-	AirplaneKey        uint
-	StartingAirportKey uint
-	FinalAirportKey    uint
-	MaxTicketsNumber   uint
-	SalesAgentKey      uint
-	AirCarrierKey      uint
-	TakeoffTime        time.Time
-	ArriveTime         time.Time
-	Date               time.Time
+	FlightKey          int
+	ScheduledDeparture time.Time
+	ScheduledArrival   time.Time
+	DepartureAirport   int
+	ArrivalAirport     int
+	Status             string
+	AircraftKey        int
+	ActualDeparture    time.Time
+	ActualArrival      time.Time
 }

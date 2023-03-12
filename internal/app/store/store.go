@@ -8,41 +8,21 @@ import (
 
 // Store ...
 type Store struct {
-	config *Config
-
-	db                 *sql.DB
-	bookingRepository  *BookingRepository
-	ticketRepository   *TicketRepository
-	airportRepository  *AirportRepository
-	flightRepository   *FlightRepository
-	aircraftRepository *AircraftRepository
+	db                     *sql.DB
+	bookingRepository      *BookingRepository
+	ticketRepository       *TicketRepository
+	airportRepository      *AirportRepository
+	flightRepository       *FlightRepository
+	aircraftRepository     *AircraftRepository
+	seatRepository         *SeatRepository
+	ticketFlightRepository *TicketFlightRepository
 }
 
 // New ...
-func New(config *Config) *Store {
+func New(db *sql.DB) *Store {
 	return &Store{
-		config: config,
+		db: db,
 	}
-}
-
-func (s *Store) Open() error {
-	db, err := sql.Open("postgres", s.config.DatabaseURL)
-
-	if err != nil {
-		return err
-	}
-
-	if err := db.Ping(); err != nil {
-		return err
-	}
-
-	s.db = db
-
-	return nil
-}
-
-func (s *Store) Close() {
-	s.db.Close()
 }
 
 func (s *Store) BookingRepository() *BookingRepository {
@@ -50,7 +30,7 @@ func (s *Store) BookingRepository() *BookingRepository {
 		return s.bookingRepository
 	}
 	s.bookingRepository = &BookingRepository{
-		store: s,
+		store: s.db,
 	}
 
 	return s.bookingRepository
@@ -62,7 +42,7 @@ func (s *Store) TicketRepository() *TicketRepository {
 	}
 
 	s.ticketRepository = &TicketRepository{
-		store: s,
+		store: s.db,
 	}
 
 	return s.ticketRepository
@@ -74,7 +54,7 @@ func (s *Store) AircraftRepository() *AircraftRepository {
 	}
 
 	s.aircraftRepository = &AircraftRepository{
-		store: s,
+		store: s.db,
 	}
 
 	return s.aircraftRepository
@@ -86,8 +66,42 @@ func (s *Store) AirportRepository() *AirportRepository {
 	}
 
 	s.airportRepository = &AirportRepository{
-		store: s,
+		store: s.db,
 	}
 
 	return s.airportRepository
+}
+
+func (s *Store) SeatRepository() *SeatRepository {
+	if s.seatRepository != nil {
+		return s.seatRepository
+	}
+
+	s.seatRepository = &SeatRepository{
+		store: s.db,
+	}
+	return s.seatRepository
+}
+
+func (s *Store) FlightRepository() *FlightRepository {
+	if s.flightRepository != nil {
+		return s.flightRepository
+	}
+
+	s.flightRepository = &FlightRepository{
+		store: s.db,
+	}
+	return s.flightRepository
+}
+
+func (s *Store) TicketFlightRepository() *TicketFlightRepository {
+	if s.ticketFlightRepository != nil {
+		return s.ticketFlightRepository
+	}
+
+	s.ticketFlightRepository = &TicketFlightRepository{
+		store: s.db,
+	}
+
+	return s.ticketFlightRepository
 }
