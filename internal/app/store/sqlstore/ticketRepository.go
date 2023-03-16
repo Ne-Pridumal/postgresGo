@@ -1,4 +1,4 @@
-package store
+package sqlstore
 
 import (
 	"database/sql"
@@ -75,4 +75,8 @@ func (r *TicketRepository) FindByName(name string) (*models.Ticket, error) {
 	}
 
 	return t, nil
+}
+
+func (r *TicketRepository) DeleteById(id int) error {
+	return deleteByIdTableWithIdField(id, "tickets", "ticket_key", r.store)
 }

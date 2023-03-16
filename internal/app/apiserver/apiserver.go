@@ -1,8 +1,9 @@
 package apiserver
 
 import (
+	"database/sql"
 	"io"
-	"ne-pridumal/go-postgress/internal/app/store"
+	"ne-pridumal/go-postgress/internal/app/store/sqlstore"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -14,7 +15,7 @@ type APIServer struct {
 	config *Config
 	logger *logrus.Logger
 	router *mux.Router
-	store  *store.Store
+	store  *sqlstore.Store
 }
 
 // New...
@@ -33,13 +34,21 @@ func (s *APIServer) Start() error {
 	}
 	s.configureRouter()
 
-	if err := s.configureStore(); err != nil {
-		return err
-	}
-
 	s.logger.Info("Starting API server")
 
 	return http.ListenAndServe(s.config.BindAddress, s.router)
+}
+
+func newDB(dbUrl string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", dbUrl)
+	if err != nil {
+		return nil, err
+	}
+	if err := db.Ping(); err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
 
 func (s *APIServer) configureLogger() error {
@@ -48,18 +57,6 @@ func (s *APIServer) configureLogger() error {
 		return err
 	}
 	s.logger.SetLevel(level)
-	return nil
-}
-
-func (s *APIServer) configureStore() error {
-	st := store.New(s.config.Store)
-
-	if err := st.Open(); err != nil {
-		return err
-	}
-
-	s.store = st
-
 	return nil
 }
 

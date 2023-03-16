@@ -1,18 +1,18 @@
-package store_test
+package sqlstore_test
 
 import (
 	"ne-pridumal/go-postgress/internal/app/models"
-	"ne-pridumal/go-postgress/internal/app/store"
+	"ne-pridumal/go-postgress/internal/app/store/sqlstore"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAircraftRepository(t *testing.T) {
-	db, teardown := store.TestDB(t, databaseURL)
+	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("aircrafts")
-	s := store.New(db)
-	aircraft, err := s.AircraftRepository().Create(&models.Aircraft{
+	s := sqlstore.New(db)
+	aircraft, err := s.Aircrafts().Create(&models.Aircraft{
 		Key:   1234,
 		Model: "123421342",
 		Range: 234324,
@@ -23,18 +23,18 @@ func TestAircraftRepository(t *testing.T) {
 }
 
 func TestAircraftRepository_FindByModel(t *testing.T) {
-	db, teardown := store.TestDB(t, databaseURL)
+	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("aircrafts")
-	s := store.New(db)
+	s := sqlstore.New(db)
 	model := "test_model"
 
-	s.AircraftRepository().Create(&models.Aircraft{
+	s.Aircrafts().Create(&models.Aircraft{
 		Key:   1234,
 		Model: model,
 		Range: 234324,
 	})
 
-	aircraft, err := s.AircraftRepository().FindByMode(model)
+	aircraft, err := s.Aircrafts().FindByMode(model)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, aircraft)

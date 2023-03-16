@@ -1,8 +1,8 @@
-package store_test
+package sqlstore_test
 
 import (
 	"ne-pridumal/go-postgress/internal/app/models"
-	"ne-pridumal/go-postgress/internal/app/store"
+	"ne-pridumal/go-postgress/internal/app/store/sqlstore"
 	"testing"
 	"time"
 
@@ -10,13 +10,13 @@ import (
 )
 
 func TestTicketFlightRepository(t *testing.T) {
-	db, teardown := store.TestDB(t, databaseURL)
+	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("ticket_flights")
-	s := store.New(db)
+	s := sqlstore.New(db)
 	fkey := 6345
 	tkey := "abc123"
 	CreateFlightAndTickets(t, fkey, tkey)
-	ticket, err := s.TicketFlightRepository().Create(&models.TicketFlights{
+	ticket, err := s.TicketFlights().Create(&models.TicketFlights{
 		FlightKey:     fkey,
 		TicketKey:     tkey,
 		Amount:        1223,
@@ -39,11 +39,11 @@ func TestTicketFlightRepository(t *testing.T) {
 
 func CreateFlightAndTickets(t *testing.T, fkey int, tkey string) {
 	CreateAircraftsAndAirports(t)
-	db, teardown := store.TestDB(t, databaseURL)
+	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("flights")
 	defer teardown("tickets")
-	s := store.New(db)
-	s.FlightRepository().Create(&models.Flight{
+	s := sqlstore.New(db)
+	s.Flights().Create(&models.Flight{
 		FlightKey:        fkey,
 		ActualArrival:    time.Now(),
 		ActualDeparture:  time.Now(),
@@ -63,12 +63,12 @@ func CreateFlightAndTickets(t *testing.T, fkey int, tkey string) {
 			time.Now().UTC().Location(),
 		),
 	})
-	s.BookingRepository().Create(&models.Booking{
+	s.Bookings().Create(&models.Booking{
 		BookRef:     bookRef,
 		TotalAmount: 1234,
 		BookDate:    time.Now(),
 	})
-	s.TicketRepository().Create(&models.Ticket{
+	s.Tickets().Create(&models.Ticket{
 		BookRef:       bookRef,
 		Key:           tkey,
 		PassengerId:   1234,

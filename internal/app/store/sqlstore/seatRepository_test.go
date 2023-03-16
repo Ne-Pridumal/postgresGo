@@ -1,8 +1,8 @@
-package store_test
+package sqlstore_test
 
 import (
 	"ne-pridumal/go-postgress/internal/app/models"
-	"ne-pridumal/go-postgress/internal/app/store"
+	"ne-pridumal/go-postgress/internal/app/store/sqlstore"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,18 +11,18 @@ import (
 var aircraftKey = 1232143
 
 func TestSeatRepository(t *testing.T) {
-	db, teardown := store.TestDB(t, databaseURL)
+	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("seats")
 	teardown("aircrafts")
-	s := store.New(db)
+	s := sqlstore.New(db)
 
-	s.AircraftRepository().Create(&models.Aircraft{
+	s.Aircrafts().Create(&models.Aircraft{
 		Key:   aircraftKey,
 		Model: "asdfasdf",
 		Range: 2134231,
 	})
 
-	seat, err := s.SeatRepository().Create(&models.Seat{
+	seat, err := s.Seats().Create(&models.Seat{
 		AircraftKey:    aircraftKey,
 		Number:         "asdf232",
 		FareConditions: "sadfas",

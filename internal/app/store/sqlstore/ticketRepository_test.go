@@ -1,8 +1,8 @@
-package store_test
+package sqlstore_test
 
 import (
 	"ne-pridumal/go-postgress/internal/app/models"
-	"ne-pridumal/go-postgress/internal/app/store"
+	"ne-pridumal/go-postgress/internal/app/store/sqlstore"
 	"testing"
 	"time"
 
@@ -12,17 +12,17 @@ import (
 var bookRef = 1234
 
 func TestTicketRepository(t *testing.T) {
-	db, teardown := store.TestDB(t, databaseURL)
+	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("tickets")
-	teardown("bookings")
-	s := store.New(db)
-	s.BookingRepository().Create(&models.Booking{
+	defer teardown("bookings")
+	s := sqlstore.New(db)
+	s.Bookings().Create(&models.Booking{
 		BookRef:     bookRef,
 		TotalAmount: 1234,
 		BookDate:    time.Now(),
 	})
 
-	ticket, err := s.TicketRepository().Create(&models.Ticket{
+	ticket, err := s.Tickets().Create(&models.Ticket{
 		BookRef:       bookRef,
 		Key:           "123",
 		PassengerId:   1234,
@@ -35,21 +35,21 @@ func TestTicketRepository(t *testing.T) {
 }
 
 func TestTicketRepository_FindByName(t *testing.T) {
-	db, teardown := store.TestDB(t, databaseURL)
+	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("tickets")
-	teardown("bookings")
-	s := store.New(db)
+	defer teardown("bookings")
+	s := sqlstore.New(db)
 	name := "ИРИСКИН ЕГОР"
 
-	_, err := s.TicketRepository().FindByName(name)
+	_, err := s.Tickets().FindByName(name)
 	assert.Error(t, err)
 
-	s.BookingRepository().Create(&models.Booking{
+	s.Bookings().Create(&models.Booking{
 		BookRef:     bookRef,
 		TotalAmount: 1234,
 		BookDate:    time.Now(),
 	})
-	s.TicketRepository().Create(&models.Ticket{
+	s.Tickets().Create(&models.Ticket{
 		BookRef:       bookRef,
 		Key:           "123",
 		PassengerId:   1234,
@@ -57,7 +57,7 @@ func TestTicketRepository_FindByName(t *testing.T) {
 		PassengerName: name,
 	})
 
-	ticket, err := s.TicketRepository().FindByName(name)
+	ticket, err := s.Tickets().FindByName(name)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, ticket)

@@ -1,4 +1,4 @@
-package store
+package sqlstore
 
 import (
 	"database/sql"
@@ -62,4 +62,8 @@ func (r *AircraftRepository) FindByMode(modelName string) (*models.Aircraft, err
 	}
 
 	return a, nil
+}
+
+func (r *AircraftRepository) DeleteById(id int) error {
+	return deleteByIdTableWithIdField(id, "aircrafts", "aircraft_key", r.store)
 }

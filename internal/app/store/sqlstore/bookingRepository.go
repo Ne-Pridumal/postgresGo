@@ -1,4 +1,4 @@
-package store
+package sqlstore
 
 import (
 	"database/sql"
@@ -65,4 +65,8 @@ func (r *BookingRepository) FindByRef(ref int) (*models.Booking, error) {
 	}
 
 	return b, nil
+}
+
+func (r *BookingRepository) DeleteById(id int) error {
+	return deleteByIdTableWithIdField(id, "bookings", "book_ref", r.store)
 }

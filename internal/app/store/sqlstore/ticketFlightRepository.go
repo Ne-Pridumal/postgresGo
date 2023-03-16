@@ -1,4 +1,4 @@
-package store
+package sqlstore
 
 import (
 	"database/sql"
@@ -62,4 +62,8 @@ func (r *TicketFlightRepository) GetAll() ([]models.TicketFlights, error) {
 	}
 
 	return ticketFlightsSlice, nil
+}
+
+func (r *TicketFlightRepository) DeleteById(id int) error {
+	return deleteByIdTableWithIdField(id, "ticket_flights", "ticket_key", r.store)
 }
