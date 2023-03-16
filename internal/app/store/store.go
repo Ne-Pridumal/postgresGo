@@ -4,7 +4,7 @@ type Store interface {
 	Tickets() TicketRepository
 	Aircrafts() AircraftRepository
 	Bookings() BookingRepository
-	Airports() AircraftRepository
+	Airports() AirportRepository
 	Flights() FlightRepository
 	Seats() SeatRepository
 	TicketFlights() TicketFlightRepository

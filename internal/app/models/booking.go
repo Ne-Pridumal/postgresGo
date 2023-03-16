@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Booking struct {
-	BookRef     int
-	BookDate    time.Time
-	TotalAmount int
+	BookRef     int       `json:"ref"`
+	BookDate    time.Time `json:"date"`
+	TotalAmount int       `json:"amount"`
 }
