@@ -3,13 +3,15 @@ package sqlstore
 import (
 	"database/sql"
 	"ne-pridumal/go-postgress/internal/app/models"
+	"strconv"
+	"time"
 )
 
-type BoardingPassRepository struct {
+type boardingPassRepository struct {
 	store *sql.DB
 }
 
-func (r *BoardingPassRepository) Create(bp *models.BoardingPass) (*models.BoardingPass, error) {
+func (r *boardingPassRepository) Create(bp *models.BoardingPass) (*models.BoardingPass, error) {
 	query := `
 		INSERT INTO boarding_passes
 		(
@@ -37,7 +39,7 @@ func (r *BoardingPassRepository) Create(bp *models.BoardingPass) (*models.Boardi
 	return bp, nil
 }
 
-func (r *BoardingPassRepository) GetAll() ([]models.BoardingPass, error) {
+func (r *boardingPassRepository) GetAll() ([]models.BoardingPass, error) {
 	query := "SELECT * FROM boarding_passes"
 	rows, err := r.store.Query(query)
 	var boardingPassesSlice []models.BoardingPass
@@ -62,4 +64,14 @@ func (r *BoardingPassRepository) GetAll() ([]models.BoardingPass, error) {
 	}
 
 	return boardingPassesSlice, nil
+}
+
+func (r *boardingPassRepository) Delete(flightId int, ticketId string, departureTime time.Time) error {
+	fields := map[string]string{
+		"ticket_key":          ticketId,
+		"flight_key":          strconv.FormatInt(int64(flightId), 10),
+		"scheduled_departure": departureTime.Format(time.RFC3339Nano),
+	}
+
+	return deleteByFields(fields, "boarding_passes", r.store)
 }

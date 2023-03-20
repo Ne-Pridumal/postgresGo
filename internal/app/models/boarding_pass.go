@@ -4,7 +4,7 @@ import "time"
 
 type BoardingPass struct {
 	TicketKey          string
-	FlightKey          uint
+	FlightKey          int
 	ScheduledDeparture time.Time
 	BoardingNo         string
 	SeatNo             string

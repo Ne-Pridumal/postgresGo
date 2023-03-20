@@ -8,4 +8,5 @@ type Store interface {
 	Flights() FlightRepository
 	Seats() SeatRepository
 	TicketFlights() TicketFlightRepository
+	BoardingPasses() BoardingPassRepository
 }

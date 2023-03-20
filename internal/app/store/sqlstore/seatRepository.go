@@ -3,13 +3,14 @@ package sqlstore
 import (
 	"database/sql"
 	"ne-pridumal/go-postgress/internal/app/models"
+	"strconv"
 )
 
-type SeatRepository struct {
+type seatRepository struct {
 	store *sql.DB
 }
 
-func (r *SeatRepository) Create(s *models.Seat) (*models.Seat, error) {
+func (r *seatRepository) Create(s *models.Seat) (*models.Seat, error) {
 	query := `
 		INSERT INTO seats (aircraft_key, seat_no, fare_conditions)
 		VALUES ($1,$2,$3)
@@ -26,7 +27,7 @@ func (r *SeatRepository) Create(s *models.Seat) (*models.Seat, error) {
 	return s, nil
 }
 
-func (r *SeatRepository) GetAll() ([]models.Seat, error) {
+func (r *seatRepository) GetAll() ([]models.Seat, error) {
 	query := "SELECT * FROM seats"
 	rows, err := r.store.Query(query)
 	var seatsSlice []models.Seat
@@ -51,6 +52,10 @@ func (r *SeatRepository) GetAll() ([]models.Seat, error) {
 	return seatsSlice, nil
 }
 
-func (r *SeatRepository) DeleteById(id int) error {
-	return deleteByIdTableWithIdField(id, "seats", "seat_no", r.store)
+func (r *seatRepository) Delete(aCode int, no string) error {
+	fields := map[string]string{
+		"aircraft_key": strconv.FormatInt(int64(aCode), 10),
+		"seat_no":      no,
+	}
+	return deleteByFields(fields, "seats", r.store)
 }

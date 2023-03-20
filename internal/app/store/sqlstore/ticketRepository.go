@@ -3,13 +3,14 @@ package sqlstore
 import (
 	"database/sql"
 	"ne-pridumal/go-postgress/internal/app/models"
+	"strconv"
 )
 
-type TicketRepository struct {
+type ticketRepository struct {
 	store *sql.DB
 }
 
-func (r *TicketRepository) Create(t *models.Ticket) (*models.Ticket, error) {
+func (r *ticketRepository) Create(t *models.Ticket) (*models.Ticket, error) {
 	query := `
 	INSERT INTO tickets (ticket_key, book_ref, passenger_id, passenger_name, contact_data) 
 	VALUES ($1,$2,$3,$4,$5) 
@@ -30,7 +31,7 @@ func (r *TicketRepository) Create(t *models.Ticket) (*models.Ticket, error) {
 	return t, nil
 }
 
-func (r *TicketRepository) GetAll() ([]models.Ticket, error) {
+func (r *ticketRepository) GetAll() ([]models.Ticket, error) {
 	query := "SELECT * FROM tickets"
 	rows, err := r.store.Query(query)
 	var ticketsSlice []models.Ticket
@@ -57,7 +58,7 @@ func (r *TicketRepository) GetAll() ([]models.Ticket, error) {
 	return ticketsSlice, nil
 }
 
-func (r *TicketRepository) FindByName(name string) (*models.Ticket, error) {
+func (r *ticketRepository) FindByName(name string) (*models.Ticket, error) {
 	query := `
 	SELECT * FROM tickets 
 	WHERE passenger_name = $1
@@ -77,6 +78,10 @@ func (r *TicketRepository) FindByName(name string) (*models.Ticket, error) {
 	return t, nil
 }
 
-func (r *TicketRepository) DeleteById(id int) error {
-	return deleteByIdTableWithIdField(id, "tickets", "ticket_key", r.store)
+func (r *ticketRepository) Delete(key string, ref int) error {
+	fields := map[string]string{
+		"ticket_key": key,
+		"book_ref":   strconv.FormatInt(int64(ref), 10),
+	}
+	return deleteByFields(fields, "tickets", r.store)
 }

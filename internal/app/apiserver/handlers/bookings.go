@@ -8,11 +8,11 @@ import (
 	"time"
 )
 
-type BookingActions struct {
+type bookingActions struct {
 	store.Store
 }
 
-func (a *BookingActions) Create() http.HandlerFunc {
+func (a *bookingActions) Create() http.HandlerFunc {
 	type request struct {
 		BookRef     int    `json:"ref"`
 		BookDate    string `json:"date"`
@@ -47,7 +47,7 @@ func (a *BookingActions) Create() http.HandlerFunc {
 	}
 }
 
-func (a *BookingActions) GetAll() http.HandlerFunc {
+func (a *bookingActions) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		bookings, err := a.Bookings().GetAll()
 		if err != nil {
@@ -58,12 +58,22 @@ func (a *BookingActions) GetAll() http.HandlerFunc {
 	}
 }
 
-func (a *BookingActions) DeleteById(id int) http.HandlerFunc {
+func (a *bookingActions) Delete() http.HandlerFunc {
+	type request struct {
+		BookRef int `json:"ref"`
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		if err := a.Bookings().DeleteById(id); err != nil {
+		req := &request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			errorResp(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		if err := a.Bookings().Delete(req.BookRef); err != nil {
 			errorResp(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-		respond(w, r, http.StatusOK, "Успех")
+		// придумать нормальный ответ
+		respond(w, r, http.StatusOK, "Успешный успех")
 	}
 }

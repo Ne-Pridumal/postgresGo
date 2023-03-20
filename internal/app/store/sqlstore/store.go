@@ -10,13 +10,14 @@ import (
 // Store ...
 type Store struct {
 	db                     *sql.DB
-	bookingRepository      *BookingRepository
-	ticketRepository       *TicketRepository
-	airportRepository      *AirportRepository
-	flightRepository       *FlightRepository
-	aircraftRepository     *AircraftRepository
-	seatRepository         *SeatRepository
-	ticketFlightRepository *TicketFlightRepository
+	bookingRepository      *bookingRepository
+	ticketRepository       *ticketRepository
+	airportRepository      *airportRepository
+	flightRepository       *flightRepository
+	aircraftRepository     *aircraftRepository
+	seatRepository         *seatRepository
+	ticketFlightRepository *ticketFlightRepository
+	boardingPassRepository *boardingPassRepository
 }
 
 // New ...
@@ -30,7 +31,7 @@ func (s *Store) Bookings() store.BookingRepository {
 	if s.bookingRepository != nil {
 		return s.bookingRepository
 	}
-	s.bookingRepository = &BookingRepository{
+	s.bookingRepository = &bookingRepository{
 		store: s.db,
 	}
 
@@ -42,7 +43,7 @@ func (s *Store) Tickets() store.TicketRepository {
 		return s.ticketRepository
 	}
 
-	s.ticketRepository = &TicketRepository{
+	s.ticketRepository = &ticketRepository{
 		store: s.db,
 	}
 
@@ -54,7 +55,7 @@ func (s *Store) Aircrafts() store.AircraftRepository {
 		return s.aircraftRepository
 	}
 
-	s.aircraftRepository = &AircraftRepository{
+	s.aircraftRepository = &aircraftRepository{
 		store: s.db,
 	}
 
@@ -66,7 +67,7 @@ func (s *Store) Airports() store.AirportRepository {
 		return s.airportRepository
 	}
 
-	s.airportRepository = &AirportRepository{
+	s.airportRepository = &airportRepository{
 		store: s.db,
 	}
 
@@ -78,7 +79,7 @@ func (s *Store) Seats() store.SeatRepository {
 		return s.seatRepository
 	}
 
-	s.seatRepository = &SeatRepository{
+	s.seatRepository = &seatRepository{
 		store: s.db,
 	}
 	return s.seatRepository
@@ -89,7 +90,7 @@ func (s *Store) Flights() store.FlightRepository {
 		return s.flightRepository
 	}
 
-	s.flightRepository = &FlightRepository{
+	s.flightRepository = &flightRepository{
 		store: s.db,
 	}
 	return s.flightRepository
@@ -100,9 +101,22 @@ func (s *Store) TicketFlights() store.TicketFlightRepository {
 		return s.ticketFlightRepository
 	}
 
-	s.ticketFlightRepository = &TicketFlightRepository{
+	s.ticketFlightRepository = &ticketFlightRepository{
 		store: s.db,
 	}
 
 	return s.ticketFlightRepository
+}
+
+func (s *Store) BoardingPasses() store.BoardingPassRepository {
+	if s.boardingPassRepository != nil {
+		return s.boardingPassRepository
+	}
+
+	s.boardingPassRepository = &boardingPassRepository{
+		store: s.db,
+	}
+
+	return s.boardingPassRepository
+
 }

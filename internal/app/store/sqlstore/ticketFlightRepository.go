@@ -3,13 +3,15 @@ package sqlstore
 import (
 	"database/sql"
 	"ne-pridumal/go-postgress/internal/app/models"
+	"strconv"
+	"time"
 )
 
-type TicketFlightRepository struct {
+type ticketFlightRepository struct {
 	store *sql.DB
 }
 
-func (r *TicketFlightRepository) Create(t *models.TicketFlights) (*models.TicketFlights, error) {
+func (r *ticketFlightRepository) Create(t *models.TicketFlights) (*models.TicketFlights, error) {
 	query := `
 		INSERT INTO ticket_flights
 		(
@@ -37,7 +39,7 @@ func (r *TicketFlightRepository) Create(t *models.TicketFlights) (*models.Ticket
 	return t, nil
 }
 
-func (r *TicketFlightRepository) GetAll() ([]models.TicketFlights, error) {
+func (r *ticketFlightRepository) GetAll() ([]models.TicketFlights, error) {
 	query := "SELECT * FROM ticket_flights"
 	rows, err := r.store.Query(query)
 	var ticketFlightsSlice []models.TicketFlights
@@ -64,6 +66,12 @@ func (r *TicketFlightRepository) GetAll() ([]models.TicketFlights, error) {
 	return ticketFlightsSlice, nil
 }
 
-func (r *TicketFlightRepository) DeleteById(id int) error {
-	return deleteByIdTableWithIdField(id, "ticket_flights", "ticket_key", r.store)
+func (r *ticketFlightRepository) Delete(flightId int, ticketId string, departureTime time.Time) error {
+	fields := map[string]string{
+		"ticket_key":          ticketId,
+		"flight_key":          strconv.FormatInt(int64(flightId), 10),
+		"scheduled_departure": departureTime.Format(time.RFC3339Nano),
+	}
+
+	return deleteByFields(fields, "ticket_flights", r.store)
 }

@@ -3,13 +3,15 @@ package sqlstore
 import (
 	"database/sql"
 	"ne-pridumal/go-postgress/internal/app/models"
+	"strconv"
+	"time"
 )
 
-type FlightRepository struct {
+type flightRepository struct {
 	store *sql.DB
 }
 
-func (r *FlightRepository) Create(f *models.Flight) (*models.Flight, error) {
+func (r *flightRepository) Create(f *models.Flight) (*models.Flight, error) {
 	query := `
 		INSERT INTO flights 
 			(flight_key, 
@@ -42,7 +44,7 @@ func (r *FlightRepository) Create(f *models.Flight) (*models.Flight, error) {
 	return f, nil
 }
 
-func (r *FlightRepository) GetAll() ([]models.Flight, error) {
+func (r *flightRepository) GetAll() ([]models.Flight, error) {
 	query := "SELECT * from flights"
 	rows, err := r.store.Query(query)
 	var flightsSlice []models.Flight
@@ -72,7 +74,7 @@ func (r *FlightRepository) GetAll() ([]models.Flight, error) {
 	return flightsSlice, nil
 }
 
-func (r *FlightRepository) FindByFlightKey(key int) (*models.Flight, error) {
+func (r *flightRepository) FindByFlightKey(key int) (*models.Flight, error) {
 	query := `
 		SELECT * FROM flights 
 		WHERE flight_key = $1
@@ -99,6 +101,10 @@ func (r *FlightRepository) FindByFlightKey(key int) (*models.Flight, error) {
 	return f, nil
 }
 
-func (r *FlightRepository) DeleteById(id int) error {
-	return deleteByIdTableWithIdField(id, "flights", "flight_key", r.store)
+func (r *flightRepository) Delete(id int, departureTime time.Time) error {
+	fields := map[string]string{
+		"flight_key":          strconv.FormatInt(int64(id), 10),
+		"scheduled_departure": departureTime.Format(time.RFC3339Nano),
+	}
+	return deleteByFields(fields, "flights", r.store)
 }
