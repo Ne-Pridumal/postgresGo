@@ -12,7 +12,7 @@ import (
 type server struct {
 	router   *mux.Router
 	logger   *logrus.Logger
-	handlers *handlers.Handlers
+	handlers *handlers.HandlerRequests
 }
 
 func newServer(store store.Store) *server {

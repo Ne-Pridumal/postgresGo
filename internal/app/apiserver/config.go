@@ -11,6 +11,6 @@ func NewConfig() *Config {
 	return &Config{
 		BindAddress: ":8080",
 		LogLevel:    "debug",
-		DatabaseURL: "user=root password=root host=pg_db dbname=my_db",
+		DatabaseURL: "host=localhost port=5432 user=root password=root dbname=pg_db sslmode=disable",
 	}
 }
