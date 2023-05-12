@@ -35,7 +35,6 @@ func (a *aircraftActions) Create() http.HandlerFunc {
 			errorResp(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
 		respond(w, r, http.StatusCreated, ac)
 	}
 }

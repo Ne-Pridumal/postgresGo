@@ -15,10 +15,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	if err := apiserver.Start(config); err != nil {
-		log.Fatal(err)
-	}
+	apiserver.Start(config)
 }
 
 var (

@@ -53,3 +53,8 @@ type BoardingPassRepository interface {
 	Repository[models.BoardingPass]
 	Delete(int, string, time.Time) error
 }
+
+// TODO: добавить коплексный запрос для выборки инфы по билету
+type ComplexRepository interface {
+	Get(*models.ComplexQuery) (models.Complex, error)
+}
